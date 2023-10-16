@@ -40,10 +40,7 @@ const AppBar = ({ onHamburgerMenuClick, loggedInUser }) => {
             color="black"
             fontSize={"md"}
             _hover={{ color: "purple" }}
-            onClick={() => {
-              //open link https://webyops.com/about/
-              window.open("https://webyops.com/about/", "_self");
-            }}
+            onClick={() => navigate("/about")}
             mr={"5"}
           >
             ABOUT WEBYOPS
@@ -53,10 +50,7 @@ const AppBar = ({ onHamburgerMenuClick, loggedInUser }) => {
             color="black"
             fontSize={"md"}
             _hover={{ color: "purple" }}
-            onClick={() => {
-              //open link https://webyops.com/about/
-              window.open("https://webyops.com/services/", "_self");
-            }}
+            onClick={() => navigate("/services")}
             mr={"5"}
           >
             SERVICES
@@ -117,10 +111,7 @@ const AppBar = ({ onHamburgerMenuClick, loggedInUser }) => {
             color="white"
             fontSize={"md"}
             _hover={{ color: "grey" }}
-            onClick={() => {
-              //open link https://webyops.com/about/
-              window.open("https://webyops.com/about/", "_self");
-            }}
+            onClick={() => navigate("/about")}
             mr={"5"}
           >
             ABOUT WEBYOPS
@@ -130,10 +121,7 @@ const AppBar = ({ onHamburgerMenuClick, loggedInUser }) => {
             color="white"
             fontSize={"md"}
             _hover={{ color: "grey" }}
-            onClick={() => {
-              //open link https://webyops.com/about/
-              window.open("https://webyops.com/services/", "_self");
-            }}
+            onClick={() => navigate("/services")}
             mr={"5"}
           >
             SERVICES

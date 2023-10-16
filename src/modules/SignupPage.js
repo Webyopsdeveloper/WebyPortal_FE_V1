@@ -84,211 +84,213 @@ function SignUp() {
   };
 
   return (
-    <Flex w={"full"} h={"full"} direction="column" align={"center"}>
+    <Flex
+      w={"full"}
+      style={{
+        minHeight: "calc(100vh - 80px)",
+      }}
+      direction="column"
+      align={"center"}
+      justify={"center"}
+      bgImage={WoUnleash}
+      bgSize={"cover"}
+      bgPosition={"center"}
+      bgRepeat={"no-repeat"}
+    >
       <Flex
-        w={"full"}
-        h={"calc(100vh - 80px)"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        bgImg={WoUnleash}
-        bgSize={"cover"}
-        bgPosition={"center"}
-        bgRepeat={"no-repeat"}
+        direction="column"
+        align="center"
+        justify="center"
+        bg="white"
+        py={"12"}
+        px={"12"}
+        rounded="md"
+        boxShadow="lg"
+        my={12}
+        overflow={"hidden"}
       >
-        <Flex
-          direction="column"
-          align="center"
-          justify="center"
-          w="43vw"
-          bg="white"
-          p={12}
-          rounded="md"
-          boxShadow="lg"
-          mt={40}
-        >
-          <Heading alignSelf="flex-start">Sign Up</Heading>
-          <Text mb={6} color="gray" alignSelf="flex-start">
-            Create an account to get started
-          </Text>
-          <Box bg="white" rounded="md" w={"full"}>
-            <Formik initialValues={initialValues} onSubmit={onSubmit}>
-              {({
-                values,
-                errors,
-                touched,
-                handleSubmit,
-                handleChange,
-                handleBlur,
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  <VStack spacing={4} align="flex-start">
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          variant="filled"
-                          placeholder="Enter your email"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
+        <Heading alignSelf="flex-start">Sign Up</Heading>
+        <Text mb={6} color="gray" alignSelf="flex-start">
+          Create an account to get started
+        </Text>
+        <Box bg="white" rounded="md" w="43vw">
+          <Formik initialValues={initialValues} onSubmit={onSubmit}>
+            {({
+              values,
+              errors,
+              touched,
+              handleSubmit,
+              handleChange,
+              handleBlur,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <VStack spacing={4} align="flex-start">
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        variant="filled"
+                        placeholder="Enter your email"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl
+                    isInvalid={!!errors.password && touched.password}
+                  >
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon
+                          as={LockIcon}
+                          bgSize={"cover"}
+                          size
+                          color="black"
                         />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl
-                      isInvalid={!!errors.password && touched.password}
-                    >
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon
-                            as={LockIcon}
-                            bgSize={"cover"}
-                            size
-                            color="black"
-                          />
-                        </InputLeftElement>
-                        <Input
-                          id="password"
-                          name="password"
-                          type={showPassword ? "text" : "password"}
-                          variant="filled"
-                          placeholder="Enter your password"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                      </InputLeftElement>
+                      <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        variant="filled"
+                        placeholder="Enter your password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                      />
+                      <InputRightElement>
+                        <Icon
+                          as={showPassword ? ViewOffIcon : ViewIcon}
+                          cursor="pointer"
+                          onClick={handlePasswordVisibility}
+                          color="gray.400"
                         />
-                        <InputRightElement>
-                          <Icon
-                            as={showPassword ? ViewOffIcon : ViewIcon}
-                            cursor="pointer"
-                            onClick={handlePasswordVisibility}
-                            color="gray.400"
-                          />
-                        </InputRightElement>
-                      </InputGroup>
-                      <FormErrorMessage>{errors.password}</FormErrorMessage>
-                    </FormControl>
+                      </InputRightElement>
+                    </InputGroup>
+                    <FormErrorMessage>{errors.password}</FormErrorMessage>
+                  </FormControl>
 
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="first_name"
-                          name="first_name"
-                          type="text"
-                          variant="filled"
-                          placeholder="First Name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="last_name"
-                          name="last_name"
-                          type="text"
-                          variant="filled"
-                          placeholder="Last Name"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="address"
-                          name="address"
-                          type="text"
-                          variant="filled"
-                          placeholder="Address"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="phone_number"
-                          name="phone_number"
-                          type="text"
-                          variant="filled"
-                          placeholder="Phone Number"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="reset_question"
-                          name="reset_question"
-                          type="text"
-                          variant="filled"
-                          placeholder="Reset Question"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="reset_answer"
-                          name="reset_answer"
-                          type="text"
-                          variant="filled"
-                          placeholder="Reset Answer"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <Button type="submit" colorScheme="purple" w="full">
-                      Sign Up
-                    </Button>
-                  </VStack>
-                </form>
-              )}
-            </Formik>
-          </Box>
-          <Divider my={4} mt={10} />
-          <Flex align="center" justify="center" w="full" mt={5}>
-            <Text color="gray" mr={2}>
-              Already have an account?
-            </Text>
-            <Link
-              to="/login"
-              style={{
-                color: "blue",
-              }}
-            >
-              Log In
-            </Link>
-          </Flex>
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="first_name"
+                        name="first_name"
+                        type="text"
+                        variant="filled"
+                        placeholder="First Name"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="last_name"
+                        name="last_name"
+                        type="text"
+                        variant="filled"
+                        placeholder="Last Name"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="address"
+                        name="address"
+                        type="text"
+                        variant="filled"
+                        placeholder="Address"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="phone_number"
+                        name="phone_number"
+                        type="text"
+                        variant="filled"
+                        placeholder="Phone Number"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="reset_question"
+                        name="reset_question"
+                        type="text"
+                        variant="filled"
+                        placeholder="Reset Question"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="reset_answer"
+                        name="reset_answer"
+                        type="text"
+                        variant="filled"
+                        placeholder="Reset Answer"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <Button type="submit" colorScheme="purple" w="full">
+                    Sign Up
+                  </Button>
+                </VStack>
+              </form>
+            )}
+          </Formik>
+        </Box>
+        <Divider my={4} mt={10} />
+        <Flex align="center" justify="center" w="full" mt={5}>
+          <Text color="gray" mr={2}>
+            Already have an account?
+          </Text>
+          <Link
+            to="/login"
+            style={{
+              color: "blue",
+            }}
+          >
+            Log In
+          </Link>
         </Flex>
       </Flex>
     </Flex>

@@ -68,7 +68,12 @@ function Login({
   const onSubmit = (values) => {
     console.table(values);
     axios
-      .post(`${Constants.API_URL}/api/login/`, values)
+      .post(`${Constants.API_URL}/api/login/`, values, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      })
       .then((response) => {
         console.log("Response:", response.data);
         // If the user is authenticated, set the loggedInUser in localStorage
@@ -106,138 +111,138 @@ function Login({
       });
   };
   return (
-    <Flex w={"full"} h={"full"} direction="column" align={"center"}>
+    <Flex
+      w={"full"}
+      style={{
+        minHeight: "calc(100vh - 80px)",
+      }}
+      direction="column"
+      align={"center"}
+      justify={"center"}
+      bgImage={WoUnleash}
+      bgSize={"cover"}
+      bgPosition={"center"}
+      bgRepeat={"no-repeat"}
+    >
       <Flex
-        w={"full"}
-        height={"100%"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        bgImage={WoUnleash}
-        bgSize={"cover"}
-        bgPosition={"center"}
-        bgRepeat={"no-repeat"}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        bg="white"
+        py={12}
+        px={"12"}
+        rounded="md"
+        boxShadow="lg"
       >
-        <Flex
-          direction="column"
-          align="center"
-          justify="center"
-          h="79vh"
-          w="43vw"
-          bg="white"
-          p={12}
-          rounded="md"
-          boxShadow="lg"
-        >
-          <Heading alignSelf="flex-start">Welcome</Heading>
-          <Text mb={6} color="grey" alignSelf="flex-start">
-            Please login to continue
-          </Text>
-          <Box bg="white" rounded="md" w={"full"}>
-            <Formik initialValues={initialValues} onSubmit={onSubmit}>
-              {({
-                values,
-                errors,
-                touched,
-                handleSubmit,
-                handleChange,
-                handleBlur,
-              }) => (
-                <form onSubmit={handleSubmit}>
-                  <VStack spacing={4} align="flex-start">
-                    <FormControl>
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon as={EmailIcon} bgSize={"cover"} color="black" />
-                        </InputLeftElement>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          variant="filled"
-                          placeholder="Enter your email"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
+        <Heading alignSelf="flex-start">Welcome</Heading>
+        <Text mb={6} color="grey" alignSelf="flex-start">
+          Please login to continue
+        </Text>
+        <Box bg="white" rounded="md" w={"35vw"}>
+          <Formik initialValues={initialValues} onSubmit={onSubmit}>
+            {({
+              values,
+              errors,
+              touched,
+              handleSubmit,
+              handleChange,
+              handleBlur,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <VStack spacing={4} align="flex-start">
+                  <FormControl>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon as={EmailIcon} bgSize={"cover"} color="black" />
+                      </InputLeftElement>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        variant="filled"
+                        placeholder="Enter your email"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                    </InputGroup>
+                  </FormControl>
+                  <FormControl
+                    isInvalid={!!errors.password && touched.password}
+                  >
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none" color={"white"}>
+                        <Icon
+                          as={LockIcon}
+                          bgSize={"cover"}
+                          size
+                          color="black"
                         />
-                      </InputGroup>
-                    </FormControl>
-                    <FormControl
-                      isInvalid={!!errors.password && touched.password}
-                    >
-                      <InputGroup>
-                        <InputLeftElement pointerEvents="none" color={"white"}>
-                          <Icon
-                            as={LockIcon}
-                            bgSize={"cover"}
-                            size
-                            color="black"
-                          />
-                        </InputLeftElement>
-                        <Input
-                          id="password"
-                          name="password"
-                          type={showPassword ? "text" : "password"}
-                          variant="filled"
-                          placeholder="Enter your password"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
+                      </InputLeftElement>
+                      <Input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        variant="filled"
+                        placeholder="Enter your password"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                      />
+                      <InputRightElement>
+                        <Icon
+                          as={showPassword ? ViewOffIcon : ViewIcon}
+                          cursor="pointer"
+                          onClick={handlePasswordVisibility}
+                          color="gray.400"
                         />
-                        <InputRightElement>
-                          <Icon
-                            as={showPassword ? ViewOffIcon : ViewIcon}
-                            cursor="pointer"
-                            onClick={handlePasswordVisibility}
-                            color="gray.400"
-                          />
-                        </InputRightElement>
-                      </InputGroup>
-                      <FormErrorMessage>{errors.password}</FormErrorMessage>
-                    </FormControl>
+                      </InputRightElement>
+                    </InputGroup>
+                    <FormErrorMessage>{errors.password}</FormErrorMessage>
+                  </FormControl>
 
-                    <Button type="submit" colorScheme="purple" w="full">
-                      Login
-                    </Button>
-                  </VStack>
-                </form>
-              )}
-            </Formik>
-          </Box>
-          <Divider my={4} mt={10} />
-          <Text
-            as="span"
-            fontSize="md"
-            fontWeight="bold"
-            color="gray.500"
-            position="relative"
-            top="-30px"
-            bg="white"
-            px="4"
-          >
-            or
+                  <Button type="submit" colorScheme="purple" w="full">
+                    Login
+                  </Button>
+                </VStack>
+              </form>
+            )}
+          </Formik>
+        </Box>
+        <Divider my={4} mt={10} />
+        <Text
+          as="span"
+          fontSize="md"
+          fontWeight="bold"
+          color="gray.500"
+          position="relative"
+          top="-30px"
+          bg="white"
+          px="4"
+        >
+          or
+        </Text>
+        <Button
+          onClick={() => {
+            console.log("clicked");
+          }}
+          colorScheme="grey"
+          w="36"
+          variant="outline"
+          leftIcon={<BsGoogle />}
+        >
+          Google
+        </Button>
+        <Flex align="center" justify="center" w="full" mt={5}>
+          <Text color="grey" mr={2}>
+            Don't have an account?
           </Text>
-          <Button
-            onClick={() => {
-              console.log("clicked");
+          <Link
+            to="/sign-up"
+            style={{
+              color: "blue",
             }}
-            colorScheme="grey"
-            w="36"
-            variant="outline"
-            leftIcon={<BsGoogle />}
           >
-            Google
-          </Button>
-          <Flex align="center" justify="center" w="full" mt={5}>
-            <Text color="grey" mr={2}>
-              Don't have an account?
-            </Text>
-            <Link
-              to="/sign-up"
-              style={{
-                color: "blue",
-              }}
-            >
-              Sign Up
-            </Link>
-          </Flex>
+            Sign Up
+          </Link>
         </Flex>
       </Flex>
     </Flex>

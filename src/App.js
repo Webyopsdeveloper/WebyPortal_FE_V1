@@ -27,6 +27,7 @@ import {
   Button,
   Text,
   Heading,
+  VStack,
 } from "@chakra-ui/react";
 import { toast } from "react-toastify";
 
@@ -42,6 +43,9 @@ import PersonalDashboard from "./modules/personalDashboard/PersonalDashboard";
 import ModuleTabBar from "./utils/components/ModuleTabBar";
 import SignUp from "./modules/SignupPage";
 import ExploreJobs from "./modules/webyopsPages/ExploreJobs";
+import AboutUs from "./modules/webyopsPages/AboutUs";
+import Services from "./modules/webyopsPages/Services";
+import CandidateView from "./modules/candidateView/CandidateView";
 
 function App() {
   const navigate = useNavigate();
@@ -146,7 +150,16 @@ function App() {
               <DrawerCloseButton />
               <DrawerHeader>Options</DrawerHeader>
               <DrawerBody>
-                <Flex direction={"column"}>
+                <VStack direction={"column"}>
+                  <Button
+                    variant={"ghost"}
+                    onClick={() => {
+                      navigate("/candidate-view");
+                      closeDrawer();
+                    }}
+                  >
+                    <Text>Candidate View</Text>
+                  </Button>
                   <Button variant={"ghost"} onClick={openUserModal}>
                     <Text>Profile</Text>
                   </Button>
@@ -159,7 +172,7 @@ function App() {
                   <Button variant={"ghost"}>
                     <Text>Dashboard</Text>
                   </Button>
-                </Flex>
+                </VStack>
               </DrawerBody>
               <DrawerFooter>
                 <Button
@@ -202,6 +215,9 @@ function App() {
             />
             <Route path="/personal-dashboard" element={<PersonalDashboard />} />
             <Route path="/explore-jobs" element={<ExploreJobs />} />
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/candidate-view" element={<CandidateView />} />
             <Route
               path="*"
               element={
