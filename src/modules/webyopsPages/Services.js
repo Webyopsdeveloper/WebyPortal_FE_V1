@@ -17,6 +17,7 @@ import {
   InputRightElement,
   Textarea,
   Checkbox,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import ServiceCover from "../../assets/wo-services.jpg";
 import Footer from "../../utils/components/Footer";
@@ -31,6 +32,9 @@ import CCPA from "../../assets/CCPA.jpg";
 import Dashboard from "../../assets/Dashboard.jpg";
 import WoAi from "../../assets/wo-ai.jpg";
 import { FaFlagUsa } from "react-icons/fa";
+import axios from "axios";
+import Constants from "../../utils/constants";
+import { toast } from "react-toastify";
 
 const Services = () => {
   const isSmallScreen = window.innerWidth < 1000;
@@ -38,13 +42,47 @@ const Services = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (values) => {
+    console.log(values);
     setIsSubmitting(true);
 
-    setTimeout(() => {
+    if (!values.terms) {
+      toast.error("Please accept the Terms of Use and Privacy Policy", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
       setIsSubmitting(false);
-      // Print the form values to the console
-      console.log("Form Values:", values);
-    }, 2000);
+      return;
+    } else {
+      axios
+        .post(`${Constants.API_URL}/api/services`, {
+          first_name: values.firstname,
+          last_name: values.lastname,
+          company: values.company,
+          email: values.email,
+          phone: values.phone,
+          message: values.message,
+        })
+        .then((response) => {
+          toast.success(
+            "Thank you for your interest in WEBYOPS, Inc. We will get back to you shortly.",
+            {
+              position: toast.POSITION.BOTTOM_LEFT,
+            }
+          );
+          console.log(response.data);
+          setIsSubmitting(false);
+          return;
+        })
+        .catch((error) => {
+          toast.error(
+            "Error submitting your request. Please try again later.",
+            {
+              position: toast.POSITION.BOTTOM_LEFT,
+            }
+          );
+          setIsSubmitting(false);
+          return;
+        });
+    }
   };
   return (
     <Flex
@@ -237,32 +275,76 @@ const Services = () => {
               email: "",
               phone: "",
               message: "",
-              terms: false, // Initial value for the checkbox
+              terms: false,
             }}
-            onSubmit={(values) => handleSubmit(values)}
+            onSubmit={(values) => {
+              //reset fields
+              handleSubmit(values);
+              values.firstname = "";
+              values.lastname = "";
+              values.company = "";
+              values.email = "";
+              values.phone = "";
+              values.message = "";
+              values.terms = false;
+              setSearchResults([]);
+            }}
           >
-            {({ values, handleChange, handleBlur, handleSubmit }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+            }) => (
               <form onSubmit={handleSubmit}>
                 <Flex direction={"row"} w={"full"} mb={"5"}>
-                  <Field
-                    as={Input}
-                    type="text"
-                    name="firstname"
-                    placeholder="First Name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.firstname}
+                  <FormControl
+                    isRequired
+                    isInvalid={!!errors.firstname && touched.firstname}
                     mr={"5"}
-                  />
-                  <Field
-                    as={Input}
-                    type="text"
-                    name="lastname"
-                    placeholder="Last Name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.lastname}
-                  />
+                  >
+                    <Field
+                      as={Input}
+                      type="text"
+                      name="firstname"
+                      placeholder="First Name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.firstname}
+                      validate={(value) => {
+                        let error;
+                        if (!value) {
+                          error = "First Name is required";
+                        }
+                        return error;
+                      }}
+                    />
+                    <FormErrorMessage>{errors.firstname}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl
+                    isRequired
+                    isInvalid={!!errors.lastname && touched.lastname}
+                  >
+                    <Field
+                      as={Input}
+                      type="text"
+                      name="lastname"
+                      placeholder="Last Name"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.lastname}
+                      validate={(value) => {
+                        let error;
+                        if (!value) {
+                          error = "Last Name is required";
+                        }
+                        return error;
+                      }}
+                    />
+                    <FormErrorMessage>{errors.lastname}</FormErrorMessage>
+                  </FormControl>
                 </Flex>
 
                 <Field
@@ -277,46 +359,97 @@ const Services = () => {
                 />
 
                 <Flex direction={"row"} w={"full"} mb={"5"}>
-                  <Field
-                    as={Input}
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.email}
+                  <FormControl
+                    isRequired
                     mr={"5"}
-                  />
-                  <InputGroup>
-                    <InputRightElement
-                      pointerEvents="none"
-                      color={"black"}
-                      rounded={"md"}
-                      bg={"white"}
-                      border={"1px solid gray"}
-                    >
-                      <FaFlagUsa />
-                    </InputRightElement>
+                    isInvalid={!!errors.email && touched.email}
+                  >
                     <Field
                       as={Input}
-                      type="tel"
-                      name="phone"
-                      placeholder="Phone"
+                      type="email"
+                      name="email"
+                      placeholder="Email"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.phone}
+                      value={values.email}
+                      mr={"5"}
+                      validate={(value) => {
+                        let error;
+                        if (!value) {
+                          error = "Email is required";
+                        }
+                        return error;
+                      }}
                     />
-                  </InputGroup>
+                    <FormErrorMessage>{errors.email}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl
+                    isRequired
+                    isInvalid={!!errors.phone && touched.phone}
+                  >
+                    <InputGroup>
+                      <InputRightElement
+                        pointerEvents="none"
+                        color={"black"}
+                        rounded={"md"}
+                        bg={"white"}
+                        border={"1px solid gray"}
+                      >
+                        <FaFlagUsa />
+                      </InputRightElement>
+                      <Field
+                        as={Input}
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.phone}
+                        validate={(value) => {
+                          let error;
+                          if (!value) {
+                            error = "Phone is required";
+                          }
+                          return error;
+                        }}
+                      />
+                    </InputGroup>
+                    <FormErrorMessage>{errors.phone}</FormErrorMessage>
+                  </FormControl>
                 </Flex>
-                <Textarea
-                  type="text"
+
+                <Field
+                  as={Input}
                   name="message"
-                  placeholder="Message"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  type="text"
                   value={values.message}
-                  mb={"5"}
-                />
+                  validate={(value) => {
+                    let error;
+                    if (!value) {
+                      error = "Message is required";
+                    }
+                    return error;
+                  }}
+                >
+                  {({ field, form }) => (
+                    <FormControl
+                      isRequired
+                      isInvalid={form.errors.message && form.touched.message}
+                    >
+                      <Textarea
+                        {...field}
+                        id="message"
+                        resize={"vertical"}
+                        placeholder="Message"
+                        mb={"5"}
+                      />
+                      <FormErrorMessage>{form.errors.message}</FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+
                 <Checkbox
                   colorScheme="green"
                   mb={"5"}

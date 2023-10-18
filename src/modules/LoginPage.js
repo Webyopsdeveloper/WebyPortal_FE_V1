@@ -71,7 +71,6 @@ function Login({
       .post(`${Constants.API_URL}/api/login/`, values, {
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
       })
       .then((response) => {

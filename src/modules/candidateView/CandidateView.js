@@ -13,7 +13,7 @@ import {
   Td,
   Button,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
 import {
   FiHome,
@@ -24,15 +24,107 @@ import {
 import { FaList, FaRegHeart } from "react-icons/fa";
 import { RiPencilLine } from "react-icons/ri";
 import { BiCog } from "react-icons/bi";
+import axios from "axios";
+import Constants from "../../utils/constants";
 
 const CandidateView = () => {
   const [menuCollapse, setMenuCollapse] = useState(false);
+  const [trainingData, setTrainingData] = useState([]);
+  const [documentsData, setDocumentsData] = useState([]);
+  const [scheduleMeetingData, setscheduleMeetingData] = useState([]);
+  const [personalData, setPersonalData] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDocumentsLoading, setIsDocumentsLoading] = useState(false);
+  const [isScheduleMeetingLoading, setIsScheduleMeetingLoading] =
+    useState(false);
+  const [isPersonalDataLoading, setIsPersonalDataLoading] = useState(false);
 
   //create a custom function that will change menucollapse state from false to true and true to false
   const menuIconClick = () => {
     //condition checking to change state from true to false and vice versa
     menuCollapse ? setMenuCollapse(false) : setMenuCollapse(true);
   };
+
+  const fetchDocumentsData = async () => {
+    setIsLoading(true);
+    await axios
+      .get(`${Constants.API_URL}/api/documents`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setDocumentsData(res.data);
+        setIsDocumentsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsDocumentsLoading(false);
+      });
+  };
+  const fetchScheduleMeetingData = async () => {
+    setIsLoading(true);
+    await axios
+      .get(`${Constants.API_URL}/api/scheduleMeeting`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setscheduleMeetingData(res.data);
+        setIsScheduleMeetingLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsScheduleMeetingLoading(false);
+      });
+  };
+  const fetchTrainingData = async () => {
+    setIsLoading(true);
+    await axios
+      .get(`${Constants.API_URL}/api/candidateTraining`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setTrainingData(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  };
+  const fetchPersonalData = async () => {
+    setIsLoading(true);
+    await axios
+      .get(`${Constants.API_URL}/api/personal-data`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setPersonalData(res.data);
+        setIsPersonalDataLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsPersonalDataLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchTrainingData();
+    fetchDocumentsData();
+    fetchScheduleMeetingData();
+    fetchPersonalData();
+  }, []);
 
   return (
     <Flex
@@ -93,7 +185,6 @@ const CandidateView = () => {
         alignItems={"start"}
       >
         <Flex
-          flex={"1"}
           h={"full"}
           direction={"column"}
           justifyContent={"space-between"}
@@ -101,7 +192,7 @@ const CandidateView = () => {
           mt={"5"}
           p={"10"}
         >
-          <Box>
+          <Box w={"full"} h={"fit-content"} mb={"5"}>
             <Text
               fontSize={"xl"}
               fontWeight={"bold"}
@@ -111,45 +202,41 @@ const CandidateView = () => {
             >
               Training to be completed
             </Text>
-            <Table variant="simple" colorScheme="teal">
-              <Tbody>
-                <Tr>
-                  <Td>LIN001</Td>
-                  <Td>LInux Basic Training</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td>candidate enter status</Td>
-                  <Td>Comments</Td>
-                </Tr>
-                <Tr>
-                  <Td>LIN001</Td>
-                  <Td>LInux Basic Training</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td>candidate enter status</Td>
-                  <Td>Comments</Td>
-                </Tr>
-                <Tr>
-                  <Td>LIN001</Td>
-                  <Td>LInux Basic Training</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td>candidate enter status</Td>
-                  <Td>Comments</Td>
-                </Tr>
-              </Tbody>
-            </Table>
+            {isLoading ? (
+              <Text my={"10"}>Loading...</Text>
+            ) : (
+              <Table variant="simple" colorScheme="teal">
+                <Tbody>
+                  {trainingData.map((training) => (
+                    <Tr>
+                      <Td>{training.id}</Td>
+                      <Td>{training.name}</Td>
+                      <Td>
+                        <Button
+                          colorScheme="teal"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            window.open(training.link, "_blank");
+                          }}
+                        >
+                          Start Here
+                        </Button>
+                      </Td>
+                      <Td>{training.status}</Td>
+                      <Td>{training.comment}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            )}
+            {isLoading === false && trainingData.length === 0 ? (
+              <Text my={"10"} alignSelf={"center"}>
+                Data not found
+              </Text>
+            ) : null}
           </Box>
-          <Box w={"full"}>
+          <Box w={"full"} h={"fit-content"}>
             <Text
               fontSize={"xl"}
               fontWeight={"bold"}
@@ -159,54 +246,40 @@ const CandidateView = () => {
             >
               Documentations and Links
             </Text>
-            <Table variant="simple" colorScheme="teal">
-              <Tbody>
-                <Tr>
-                  <Td>Pythong e books </Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Mocking Interview for Python </Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Mocking Interview for SQL </Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Mocking Interview for Linux </Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Start Here
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-              </Tbody>
-            </Table>
+            {isDocumentsLoading ? (
+              <Text my={"10"}>Loading...</Text>
+            ) : (
+              <Table variant="simple" colorScheme="teal">
+                <Tbody>
+                  {documentsData.map((document) => (
+                    <Tr>
+                      <Td>{document.id}</Td>
+                      <Td>{document.title}</Td>
+                      <Td>
+                        <Button
+                          colorScheme="teal"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            window.open(document.link, "_blank");
+                          }}
+                        >
+                          Start Here
+                        </Button>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            )}
+            {isDocumentsLoading === false && documentsData.length === 0 ? (
+              <Text my={"10"} alignSelf={"center"}>
+                Data not found
+              </Text>
+            ) : null}
           </Box>
         </Flex>
         <Flex
-          flex={"1"}
           h={"full"}
           direction={"column"}
           justifyContent={"space-between"}
@@ -214,7 +287,7 @@ const CandidateView = () => {
           mt={"5"}
           p={"10"}
         >
-          <Box>
+          <Box w={"full"} h={"fit-content"} mb={"5"}>
             <Text
               fontSize={"xl"}
               fontWeight={"bold"}
@@ -224,54 +297,33 @@ const CandidateView = () => {
             >
               Personal Data
             </Text>
-            <Table variant="simple" colorScheme="teal">
-              <Tbody>
-                <Tr>
-                  <Td>Personal Details</Td>
-                  <Td>Template View</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Upload
-                    </Button>
-                  </Td>
-                  <Td>ActionType</Td>
-                </Tr>
-                <Tr>
-                  <Td>Resume</Td>
-                  <Td>Template View</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Upload
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Visa Staus</Td>
-                  <Td></Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Upload
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>DL Copy</Td>
-                  <Td></Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Other Docs</Td>
-                  <Td></Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-              </Tbody>
-            </Table>
+            {isPersonalDataLoading ? (
+              <Text my={"10"}>Loading...</Text>
+            ) : (
+              <Table variant="simple" colorScheme="teal">
+                <Tbody>
+                  {personalData.map((data) => (
+                    <Tr key={data.id}>
+                      <Td>{data.title}</Td>
+                      <Td>{data.template_view}</Td>
+                      <Td>
+                        <Button colorScheme="teal" variant="outline" size="sm">
+                          Upload
+                        </Button>
+                      </Td>
+                      <Td>{data.action_type}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            )}
+            {isPersonalDataLoading === false && personalData.length === 0 ? (
+              <Text my={"10"} alignSelf={"center"}>
+                Data not found
+              </Text>
+            ) : null}
           </Box>
-          <Box>
+          <Box w={"full"} h={"fit-content"}>
             <Text
               fontSize={"xl"}
               fontWeight={"bold"}
@@ -281,58 +333,39 @@ const CandidateView = () => {
             >
               Schedule meeting with us
             </Text>
-            <Table variant="simple" colorScheme="teal">
-              <Tbody>
-                <Tr>
-                  <Td>Office Hours</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Zoom Link
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Schedule meeting with us</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="outline" size="sm">
-                      Click Here
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>Marketing Team</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="link" size="sm">
-                      mtailor2002@gmail.com
-                    </Button>
-                  </Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="link" size="sm">
-                      +19999999999
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                </Tr>
-                <Tr>
-                  <Td>HR Team</Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="link" size="sm">
-                      mtailor@gmail.com
-                    </Button>
-                  </Td>
-                  <Td>
-                    <Button colorScheme="teal" variant="link" size="sm">
-                      +19999999999
-                    </Button>
-                  </Td>
-                  <Td></Td>
-                </Tr>
-              </Tbody>
-            </Table>
+            {isScheduleMeetingLoading ? (
+              <Text my={"10"}>Loading...</Text>
+            ) : (
+              <Table variant="simple" colorScheme="teal">
+                <Tbody>
+                  {scheduleMeetingData.map((meeting) => (
+                    <Tr>
+                      <Td>{meeting.id}</Td>
+                      <Td>{meeting.title}</Td>
+                      <Td>
+                        <Button
+                          colorScheme="teal"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            window.open(meeting.link, "_blank");
+                          }}
+                        >
+                          Start Here
+                        </Button>
+                      </Td>
+                      <Td>{meeting.contact}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            )}
+            {isScheduleMeetingLoading === false &&
+            scheduleMeetingData.length === 0 ? (
+              <Text my={"10"} alignSelf={"center"}>
+                Data not found
+              </Text>
+            ) : null}
           </Box>
         </Flex>
       </Flex>

@@ -142,14 +142,6 @@ const ExploreJobs = () => {
   // ];
   useEffect(() => {
     fetchData();
-
-    const fetchDataInterval = setInterval(() => {
-      fetchData();
-    }, 2 * 60 * 60 * 1000);
-
-    return () => {
-      clearInterval(fetchDataInterval);
-    };
   }, []);
 
   async function fetchData() {
@@ -444,14 +436,17 @@ const ExploreJobs = () => {
           </Text>
         )}
         {isSearching && (
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="purple"
-            size="xl"
-            mt={"5"}
-          />
+          <Flex justify={"center"} align={"center"} mt={"5"} w={"full"}>
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="purple"
+              size="xl"
+              mt={"5"}
+              alignSelf={"center"}
+            />
+          </Flex>
         )}
       </Box>
 
@@ -520,7 +515,7 @@ const JobList = ({ jobs }) => {
             {job.jobName}
           </Text>
           <Text color={"gray"} flex={"1"}>
-            {job.city}
+            {job.location}
           </Text>
           <Text color={"gray"} flex={"1"}>
             {" "}
